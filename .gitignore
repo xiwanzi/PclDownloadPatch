@@ -1,0 +1,10 @@
+bin/
+obj/
+.test/
+dist/
+build-dependencies/
+*.exe
+*.dll
+*.zip
+*.log
+*.bundle

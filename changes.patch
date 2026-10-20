@@ -1,0 +1,67 @@
+# PCL 2.99.0.0 — decompiled C# changes for review
+# Original SHA-256: 6b6e1260cb5a1d6a303855f1c60cab3d0bc1aebba7e40a964180188b271e7386
+# Modified SHA-256: ab2393da46faccc265c8014d08568f11af01652fb1f5c27ff37df1398e26a02a
+# Decompiled with ILSpy 10.1.0.8386; not a complete source project.
+
+--- a/PCL/PageDownloadInstall.cs
++++ b/PCL/PageDownloadInstall.cs
+@@ -1550,13 +1550,17 @@
+ 	public virtual void LoaderInit()
+ 	{
+ 		ControlInit();
+-		PageLoaderInit(LoadMinecraft, PanLoad, PanAllBack, null, new ModLoader.LoaderTask<string, ModDownload.DlClientListResult>("关闭下载", [SpecialName] (ModLoader.LoaderTask<string, ModDownload.DlClientListResult> a0) =>
++		MyLoading loadMinecraft = LoadMinecraft;
++		MyCard panLoad = PanLoad;
++		Grid panAllBack = PanAllBack;
++		new ModLoader.LoaderTask<string, ModDownload.DlClientListResult>("关闭下载", [SpecialName] (ModLoader.LoaderTask<string, ModDownload.DlClientListResult> a0) =>
+ 		{
+ 			((VB$AnonymousDelegate_10)([SpecialName] () =>
+ 			{
+ 				throw new Exception("为遵守相关法律法规，PCL 暂时不再提供 MC 下载功能，非常抱歉 qwq……");
+ 			}))();
+-		}), [SpecialName] (ModLoader.LoaderTask<string, ModDownload.DlClientListResult> a0) =>
++		});
++		PageLoaderInit(loadMinecraft, panLoad, panAllBack, null, ModDownload.DlClientListLoader, [SpecialName] (ModLoader.LoaderTask<string, ModDownload.DlClientListResult> a0) =>
+ 		{
+ 			LoadMinecraft_OnFinish();
+ 		});
+--- a/PCL/ModSecret.cs
++++ b/PCL/ModSecret.cs
+@@ -1314,7 +1314,7 @@
+ 					int num6 = (int)(val["importantLevel"] ?? JToken.op_Implicit(2));
+ 					bool flag2 = (bool)(val["isUpdate"] ?? JToken.op_Implicit(false));
+ 					Logger.Info($"重要等级 {num6}，更新公告 {flag2}", (LogBehavior)0, "E:\\Projects\\PCL\\本体代码\\Plain Craft Launcher 2\\Modules\\ModSecret.vb");
+-					if (Settings.Get<int>(flag2 ? "SystemSystemUpdate" : "SystemSystemActivity") > num6 || (flag2 && IsUpdating))
++					if (flag2 || Settings.Get<int>("SystemSystemActivity") > num6 || (flag2 && IsUpdating))
+ 					{
+ 						continue;
+ 					}
+@@ -1385,12 +1385,10 @@
+ 									{
+ 										InputPotatoCode(IsUpdating: true);
+ 									}
+-									if (!HasUpdatePermission)
++									if (HasUpdatePermission)
+ 									{
+-										break;
+ 									}
+ 								}
+-								UpdateStart(flag3);
+ 								break;
+ 							}
+ 							default:
+--- a/PCL/Settings.cs
++++ b/PCL/Settings.cs
+@@ -169,7 +169,7 @@
+ 		new Setting("SystemDebugDelay", false, Sources.Registry),
+ 		new Setting("SystemDebugSkipCopy", false, Sources.Registry),
+ 		new Setting("SystemSystemCache", "", Sources.Registry),
+-		new Setting("SystemSystemUpdate", 0),
++		new Setting("SystemSystemUpdate", 3),
+ 		new Setting("SystemSystemActivity", 0),
+ 		new Setting("SystemSystemTelemetry", true, Sources.Registry),
+ 		new Setting("CacheDrops", "", Sources.Registry),
+--- /dev/null
++++ b/PCL/ModificationInfo.cs
+@@ -0,0 +1 @@
++[assembly: System.Reflection.AssemblyMetadata("ModifiedBy", "xiwanzi")]
